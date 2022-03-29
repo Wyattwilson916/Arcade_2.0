@@ -1,52 +1,132 @@
-let playerOne = document.createElement("INPUT");
-playerOne.setAttribute("type", "submit");
-
-let playerTwo = document.createElement("INPUT");
-playerTwo.setAttribute("type", "submit");
-
-console.log(playerOne)
-
 const board = document.getElementById("board");
+const nameOneOutput = document.getElementById("nameOneOutput");
+const nameTwoOutput = document.getElementById("nameTwoOutput");
+const starterOutput = document.getElementById("starterOutput");
+let playerOne = document.getElementById("playerOne");
+let playerTwo = document.getElementById("playerTwo");
+let submitNames = document.getElementById("submitNames");
+
+async function displayNames() {
+  submitNames.addEventListener("click", displayNames);
+
+  nameOneOutput.innerHTML = playerOne.value;
+  nameTwoOutput.innerHTML = playerTwo.value;
+
+  function rng() {
+    const Num = Math.random();
+    if (Num > 0.5) {
+      let startingPlayer = playerOne.value;
+      starterOutput.innerHTML = startingPlayer
+      console.log("Starting player is", startingPlayer);
+    } else {
+      let startingPlayer = playerTwo.value;
+      starterOutput.innerHTML = startingPlayer
+      console.log("Starting player is", startingPlayer);
+    }
+  }
+  if (playerOne.value && playerTwo.value) {
+    rng();
+  }
+}
 
 const gameState = {
-  players: ["x", "o"],
+  winner: null,
+  players: ["X", "O"],
+  currentPlayer: "X",
   board: [
     [null, null, null],
     [null, null, null],
     [null, null, null],
   ],
+  winningConditions: [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ],
 };
 
-// Input user names, display names
-function names(){
-
-}
-
-// For randomly picking the starting player
-function rng() {
-  const Num = Math.random();
-  console.log(Num);
-  if (Num > 0.5) {
-    let startingPlayer = gameState.players[1];
-    console.log("Starting player is", startingPlayer.toUpperCase());
-  } else {
-    let startingPlayer = gameState.players[0];
-    console.log("Starting player is", startingPlayer.toUpperCase());
+function gameBoard() {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.id = `${i}-${j}`;
+      board.appendChild(cell);
+    }
   }
 }
 
+gameBoard();
 
 function buildInitialState() {
-  rng();
+  displayNames();
 }
+
 buildInitialState();
 
-function renderState() {}
-
-function onBoardClick() {
-  renderState();
+function playerChange() {
+  if (gameState.currentPlayer === gameState.players[0]) {
+    gameState.currentPlayer = gameState.players[1];
+  } else {
+    gameState.currentPlayer = gameState.players[0];
+  }
 }
-//for loop to switch players, loop thru players
-//if player x place x in box, etc.
 
-//check for winner
+function gameMove(id, event) {
+  const row = id[0];
+  const column = id[2];
+  if (gameState.board[row][column] === null) {
+    gameState.board[row][column] = gameState.currentPlayer;
+    event.target.innerText = gameState.board[row][column];
+  }
+}
+
+function winningCondition() {
+  let roundWon = false;
+  for (let i = 0; i <= gameState.winningConditions.length; i++) {
+    const winCondition = winningCondition[i];
+    let winA = gameState[winCondition[0]];
+    let winB = gameState[winCondition[1]];
+    let winC = gameState[winCondition[2]];
+    if (winA === "" || winB === "" || winC === "") {
+      winContinue;
+    }
+    if (winA === winB && winB === winC) {
+      roundWon = true;
+      break;
+    }
+  }
+  if (roundWon) {
+    statusDisplay.innerHTML = winningMessage();
+    gameActive = false;
+    return;
+  }
+}
+
+function handleClick(event) {
+  const id = event.target.id;
+  gameMove(id, event);
+  playerChange();
+}
+
+board.addEventListener("click", handleClick);
+
+// enter our names and have them displayed *
+// have our order chosen for us by the game *
+// take turns placing our marks in empty spaces *
+// not be able to place our marks in an occupied space *
+// be told when a move causes a player to win, or to draw
+// start the game over without having to reset the browser
+// As a user playing a one player game I want to:
+
+// see the name 'Computer' displayed as my opponent
+// have the Computer player make moves as if it were a human player with the correct mark in an empty space
+// As a user playing a single player game I would be delighted to:
+
+// have the Computer make 'better-than-guessing' choices when placing a mark on the board
+// set the board size myself ("wider" or "taller" than 3x3)

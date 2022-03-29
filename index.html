@@ -1,23 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arcade</title>
-    <link rel="stylesheet" href="index.css"/>
+    <link rel="stylesheet" href="index.css" />
     <script defer src="index.js"></script>
-</head>
-<body>
-    <input
-      type="text"
-      placeholder="Enter Name"
-    />
-    <input
-      type="text"
-      placeholder="Enter Name"
-    />
-    <button type="submit">Set Player Names</button>
+  </head>
+  <body>
+    <article class="names">
+      <input
+        type="text"
+        placeholder="Enter Username"
+        maxlength="12"
+        id="playerOne"
+      />
+      <input
+        type="text"
+        placeholder="Enter Username"
+        maxlength="12"
+        id="playerTwo"
+      />
+      <input type="button" id="submitNames" value="Submit Names" />
+     <p>
+      Current Players:
+      <p class="output" id="nameOneOutput"> </p>
+      <p class="output" id="nameTwoOutput"> </p>
+      
+      Starting Player is:
+      <p class="output" id="starterOutput"></p>
+    </p>  
+    </article>
     <div id="board"></div>
-</body>
+  </body>
 </html>
