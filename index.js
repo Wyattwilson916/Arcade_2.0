@@ -1,14 +1,14 @@
 const board = document.getElementById("board");
 const nameOneOutput = document.getElementById("nameOneOutput");
 const nameTwoOutput = document.getElementById("nameTwoOutput");
-const starterOutput = document.getElementById("starterOutput");
+let currentOutput = document.getElementById("currentOutput");
 let playerOne = document.getElementById("playerOne");
 let playerTwo = document.getElementById("playerTwo");
 let submitNames = document.getElementById("submitNames");
+let statusDisplay = document.getElementById("statusDisplay");
 
 async function displayNames() {
   submitNames.addEventListener("click", displayNames);
-
   nameOneOutput.innerHTML = playerOne.value;
   nameTwoOutput.innerHTML = playerTwo.value;
 
@@ -16,11 +16,11 @@ async function displayNames() {
     const Num = Math.random();
     if (Num > 0.5) {
       let startingPlayer = playerOne.value;
-      starterOutput.innerHTML = startingPlayer
+      currentOutput.innerHTML = startingPlayer;
       console.log("Starting player is", startingPlayer);
     } else {
       let startingPlayer = playerTwo.value;
-      starterOutput.innerHTML = startingPlayer
+      currentOutput.innerHTML = startingPlayer;
       console.log("Starting player is", startingPlayer);
     }
   }
@@ -61,10 +61,9 @@ function gameBoard() {
   }
 }
 
-gameBoard();
-
 function buildInitialState() {
   displayNames();
+  gameBoard();
 }
 
 buildInitialState();
@@ -72,8 +71,10 @@ buildInitialState();
 function playerChange() {
   if (gameState.currentPlayer === gameState.players[0]) {
     gameState.currentPlayer = gameState.players[1];
+    currentOutput.innerHTML = playerOne.value;
   } else {
     gameState.currentPlayer = gameState.players[0];
+    currentOutput.innerHTML = playerTwo.value;
   }
 }
 
@@ -83,16 +84,18 @@ function gameMove(id, event) {
   if (gameState.board[row][column] === null) {
     gameState.board[row][column] = gameState.currentPlayer;
     event.target.innerText = gameState.board[row][column];
+    playerChange();
   }
 }
+
+// const winningMessage = () => `Player ${currentPlayer} has won!`;
 
 function winningCondition() {
   let roundWon = false;
   for (let i = 0; i <= gameState.winningConditions.length; i++) {
-    const winCondition = winningCondition[i];
-    let winA = gameState[winCondition[0]];
-    let winB = gameState[winCondition[1]];
-    let winC = gameState[winCondition[2]];
+    let winA = gameState.winningConditions[0];
+    let winB = gameState.winningConditions[1];
+    let winC = gameState.winningConditions[2];
     if (winA === "" || winB === "" || winC === "") {
       winContinue;
     }
@@ -101,8 +104,8 @@ function winningCondition() {
       break;
     }
   }
-  if (roundWon) {
-    statusDisplay.innerHTML = winningMessage();
+  if (roundWon === true) {
+    statusDisplay.innerHTML = gameState.currentPlayer;
     gameActive = false;
     return;
   }
@@ -111,7 +114,7 @@ function winningCondition() {
 function handleClick(event) {
   const id = event.target.id;
   gameMove(id, event);
-  playerChange();
+  winningCondition(event);
 }
 
 board.addEventListener("click", handleClick);
@@ -122,10 +125,12 @@ board.addEventListener("click", handleClick);
 // not be able to place our marks in an occupied space *
 // be told when a move causes a player to win, or to draw
 // start the game over without having to reset the browser
+
 // As a user playing a one player game I want to:
 
 // see the name 'Computer' displayed as my opponent
 // have the Computer player make moves as if it were a human player with the correct mark in an empty space
+
 // As a user playing a single player game I would be delighted to:
 
 // have the Computer make 'better-than-guessing' choices when placing a mark on the board
