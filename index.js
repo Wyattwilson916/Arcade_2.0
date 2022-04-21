@@ -71,11 +71,13 @@ buildInitialState();
 function playerChange() {
   if (gameState.currentPlayer === gameState.players[0]) {
     gameState.currentPlayer = gameState.players[1];
-    currentOutput.innerHTML = playerOne.value;
-  } else {
-    gameState.currentPlayer = gameState.players[0];
     currentOutput.innerHTML = playerTwo.value;
-  }
+    console.log(`It's ${gameState.currentPlayer}'s turn`)
+  } else if (gameState.currentPlayer === gameState.players[1]) {
+    gameState.currentPlayer = gameState.players[0];
+    currentOutput.innerHTML = playerOne.value;
+   console.log(`It's ${gameState.currentPlayer}'s turn`)
+ }
 }
 
 function gameMove(id, event) {
@@ -91,30 +93,26 @@ function gameMove(id, event) {
 // const winningMessage = () => `Player ${currentPlayer} has won!`;
 
 function winningCondition() {
-  let roundWon = false;
-  for (let i = 0; i <= gameState.winningConditions.length; i++) {
-    let winA = gameState.winningConditions[0];
-    let winB = gameState.winningConditions[1];
-    let winC = gameState.winningConditions[2];
-    if (winA === "" || winB === "" || winC === "") {
-      winContinue;
+  let flatGameBoard = gameState.board.flat();
+  for (let i = 0; i < gameState.winningConditions.length; i++) {
+    let win1 = gameState.winningConditions[i][0];
+    let win2 = gameState.winningConditions[i][1];
+    let win3 = gameState.winningConditions[i][2];
+    let cellA = flatGameBoard[win1];
+    let cellB = flatGameBoard[win2];
+    let cellC = flatGameBoard[win3];
+    if (cellA !== null && cellA === cellB && cellB === cellC) {
+      return true;
     }
-    if (winA === winB && winB === winC) {
-      roundWon = true;
-      break;
-    }
-  }
-  if (roundWon === true) {
-    statusDisplay.innerHTML = gameState.currentPlayer;
-    gameActive = false;
-    return;
+    return false;
   }
 }
 
 function handleClick(event) {
   const id = event.target.id;
-  gameMove(id, event);
-  winningCondition(event);
+  if(!winningCondition()){
+    gameMove(id, event)
+  }
 }
 
 board.addEventListener("click", handleClick);
