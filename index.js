@@ -8,6 +8,27 @@ let submitNames = document.getElementById("submitNames");
 let statusDisplay = document.getElementById("statusDisplay");
 let reset = document.getElementById("reset");
 
+let gameState = {
+  winner: null,
+  players: ["X", "O"],
+  currentPlayer: "X",
+  board: [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
+  ],
+  winningConditions: [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ],
+};
+
 async function displayNames() {
   submitNames.addEventListener("click", displayNames);
   nameOneOutput.innerHTML = playerOne.value;
@@ -29,27 +50,6 @@ async function displayNames() {
     rng();
   }
 }
-
-let gameState = {
-  winner: null,
-  players: ["X", "O"],
-  currentPlayer: "X",
-  board: [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-  ],
-  winningConditions: [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ],
-};
 
 function gameBoard() {
   for (let i = 0; i < 3; i++) {
@@ -151,6 +151,15 @@ reset.addEventListener("click", () => {
   renderBoard();
 });
 
+function startGame() {
+  playerOne.value = "";
+  playerTwo.value = "";
+  winner = null;
+  
+}
+
+startGame();
+reset.addEventListener("click", startGame);
 // enter our names and have them displayed *
 // have our order chosen for us by the game *
 // take turns placing our marks in empty spaces *
