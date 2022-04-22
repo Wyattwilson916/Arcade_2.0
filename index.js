@@ -6,6 +6,7 @@ let playerOne = document.getElementById("playerOne");
 let playerTwo = document.getElementById("playerTwo");
 let submitNames = document.getElementById("submitNames");
 let statusDisplay = document.getElementById("statusDisplay");
+let reset = document.getElementById("reset");
 
 async function displayNames() {
   submitNames.addEventListener("click", displayNames);
@@ -29,7 +30,7 @@ async function displayNames() {
   }
 }
 
-const gameState = {
+let gameState = {
   winner: null,
   players: ["X", "O"],
   currentPlayer: "X",
@@ -72,12 +73,12 @@ function playerChange() {
   if (gameState.currentPlayer === gameState.players[0]) {
     gameState.currentPlayer = gameState.players[1];
     currentOutput.innerHTML = playerTwo.value;
-    console.log(`It's ${gameState.currentPlayer}'s turn`)
+    console.log(`It's ${gameState.currentPlayer}'s turn`);
   } else if (gameState.currentPlayer === gameState.players[1]) {
     gameState.currentPlayer = gameState.players[0];
     currentOutput.innerHTML = playerOne.value;
-   console.log(`It's ${gameState.currentPlayer}'s turn`)
- }
+    console.log(`It's ${gameState.currentPlayer}'s turn`);
+  }
 }
 
 function gameMove(id, event) {
@@ -110,12 +111,45 @@ function winningCondition() {
 
 function handleClick(event) {
   const id = event.target.id;
-  if(!winningCondition()){
-    gameMove(id, event)
+  if (!winningCondition()) {
+    gameMove(id, event);
   }
 }
 
 board.addEventListener("click", handleClick);
+
+function renderBoard() {
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      const cell = document.getElementById(`${i}-${j}`);
+      cell.innerText = gameState.board[i][j];
+    }
+  }
+}
+
+reset.addEventListener("click", () => {
+  gameState = {
+    winner: null,
+    players: ["X", "O"],
+    currentPlayer: "X",
+    board: [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ],
+    winningConditions: [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ],
+  };
+  renderBoard();
+});
 
 // enter our names and have them displayed *
 // have our order chosen for us by the game *
