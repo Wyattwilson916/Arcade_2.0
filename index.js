@@ -1,12 +1,42 @@
 const board = document.getElementById("board");
-const nameOneOutput = document.getElementById("nameOneOutput");
-const nameTwoOutput = document.getElementById("nameTwoOutput");
+let nameOneOutput = document.getElementById("nameOneOutput");
+let nameTwoOutput = document.getElementById("nameTwoOutput");
+const submitNames = document.getElementById("submitNames");
 let currentOutput = document.getElementById("currentOutput");
 let playerOne = document.getElementById("playerOne");
 let playerTwo = document.getElementById("playerTwo");
-let submitNames = document.getElementById("submitNames");
 let statusDisplay = document.getElementById("statusDisplay");
 let reset = document.getElementById("reset");
+const form = document.getElementById('my_form');
+
+
+async function displayNames() {
+  submitNames.addEventListener("click", displayNames);
+  nameOneOutput.innerHTML = playerOne.value;
+  nameTwoOutput.innerHTML = playerTwo.value;
+  
+  form.addEventListener("submit", function handleSubmit(event){
+    event.preventDefault()
+    form.reset()
+  })
+  
+  
+  function rng() {
+    const Num = Math.random();
+    if (Num > 0.5) {
+      let startingPlayer = playerOne.value;
+      currentOutput.innerHTML = startingPlayer;
+      console.log("Starting player is", startingPlayer);
+    } else {
+      let startingPlayer = playerTwo.value;
+      currentOutput.innerHTML = startingPlayer;
+      console.log("Starting player is", startingPlayer);
+    }
+  }
+  if (playerOne.value && playerTwo.value) {
+    rng();
+  }
+}
 
 let gameState = {
   winner: null,
@@ -28,28 +58,6 @@ let gameState = {
     [2, 4, 6],
   ],
 };
-
-async function displayNames() {
-  submitNames.addEventListener("click", displayNames);
-  nameOneOutput.innerHTML = playerOne.value;
-  nameTwoOutput.innerHTML = playerTwo.value;
-
-  function rng() {
-    const Num = Math.random();
-    if (Num > 0.5) {
-      let startingPlayer = playerOne.value;
-      currentOutput.innerHTML = startingPlayer;
-      console.log("Starting player is", startingPlayer);
-    } else {
-      let startingPlayer = playerTwo.value;
-      currentOutput.innerHTML = startingPlayer;
-      console.log("Starting player is", startingPlayer);
-    }
-  }
-  if (playerOne.value && playerTwo.value) {
-    rng();
-  }
-}
 
 function gameBoard() {
   for (let i = 0; i < 3; i++) {
@@ -149,17 +157,17 @@ reset.addEventListener("click", () => {
     ],
   };
   renderBoard();
+  function restartGame() {
+    nameOneOutput.innerHTML = "";
+    nameTwoOutput.innerHTML = "";
+    winner = null;
+    
+  }
+  
+  restartGame();
 });
 
-function startGame() {
-  playerOne.value = "";
-  playerTwo.value = "";
-  winner = null;
-  
-}
 
-startGame();
-reset.addEventListener("click", startGame);
 // enter our names and have them displayed *
 // have our order chosen for us by the game *
 // take turns placing our marks in empty spaces *
