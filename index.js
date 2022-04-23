@@ -7,30 +7,66 @@ let playerOne = document.getElementById("playerOne");
 let playerTwo = document.getElementById("playerTwo");
 let statusDisplay = document.getElementById("statusDisplay");
 let reset = document.getElementById("reset");
-const form = document.getElementById('my_form');
+const form = document.getElementById("my_form");
+const form2 = document.getElementById("my_form2");
+const singlePlayBtn = document.getElementById("1PlayBtn");
+const twoPlayBtn = document.getElementById("2PlayBtn");
 
+form.style.display = "none";
+form2.style.display = "none";
+submitNames.style.display = "none";
 
-async function displayNames() {
+singlePlayBtn.addEventListener("click", () => {
+  submitNames.style.display = "block";
+  if (form2.style.display === "block") {
+    form2.style.display = "none";
+    form.style.display = "block";
+  } else {
+    if (form.style.display === "block") {
+      form.style.display = "none";
+    } else {
+      form.style.display = "block";
+    }
+  }
+});
+
+twoPlayBtn.addEventListener("click", () => {
+  submitNames.style.display = "block";
+  if (form.style.display === "block") {
+    form.style.display = "none";
+    form2.style.display = "block";
+  } else {
+    if (form2.style.display === "block") {
+      form2.style.display = "none";
+    } else {
+      form2.style.display = "block";
+    }
+  }
+});
+
+function displayNames() {
   submitNames.addEventListener("click", displayNames);
-  nameOneOutput.innerHTML = playerOne.value;
-  nameTwoOutput.innerHTML = playerTwo.value;
+  if(playerOne.value && playerTwo.value){
+    nameOneOutput.innerHTML = playerOne.value;
+    nameTwoOutput.innerHTML = playerTwo.value;
+  } else if(!nameTwoOutput.innerHTML){
+    nameOneOutput.innerHTML = playerOne.value;
+    nameTwoOutput.innerHTML = "Computer";
+  }
   
-  form.addEventListener("submit", function handleSubmit(event){
-    event.preventDefault()
-    form.reset()
-  })
-  
-  
+
+  submitNames.addEventListener("click", function handleSubmit(event) {
+    event.preventDefault();
+    form.reset();
+    form2.reset();
+  });
+
   function rng() {
     const Num = Math.random();
     if (Num > 0.5) {
-      let startingPlayer = playerOne.value;
-      currentOutput.innerHTML = startingPlayer;
-      console.log("Starting player is", startingPlayer);
+      currentOutput.innerHTML = playerOne.value;
     } else {
-      let startingPlayer = playerTwo.value;
-      currentOutput.innerHTML = startingPlayer;
-      console.log("Starting player is", startingPlayer);
+      currentOutput.innerHTML = playerTwo.value;
     }
   }
   if (playerOne.value && playerTwo.value) {
@@ -160,24 +196,23 @@ reset.addEventListener("click", () => {
   function restartGame() {
     nameOneOutput.innerHTML = "";
     nameTwoOutput.innerHTML = "";
-    winner = null;
-    
+    winner = "";
+    currentOutput = ""
   }
-  
+
   restartGame();
 });
-
 
 // enter our names and have them displayed *
 // have our order chosen for us by the game *
 // take turns placing our marks in empty spaces *
 // not be able to place our marks in an occupied space *
 // be told when a move causes a player to win, or to draw
-// start the game over without having to reset the browser
+// start the game over without having to reset the browser*
 
 // As a user playing a one player game I want to:
 
-// see the name 'Computer' displayed as my opponent
+// see the name 'Computer' displayed as my opponent*
 // have the Computer player make moves as if it were a human player with the correct mark in an empty space
 
 // As a user playing a single player game I would be delighted to:
